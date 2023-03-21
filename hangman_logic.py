@@ -12,6 +12,8 @@ while True:
     r_index = random.randrange(0, len(data_list))
     word = data_list[r_index].replace(u"\xa0", u" ").split(" ")[1]
     if len(word) <= 6 :break
+
+# word = ''
 word = word.upper()
 # 단어의 글자 수만큼 밑줄을 듯는다
 word_show ="_"*len(word)
@@ -27,7 +29,7 @@ while True:
     # 포함되지 않는다면 사람을 1획 씩 그린다
     result = word.find(ans)
     print(result)
-    if result == -1 :
+    if result == -1:
         print("오답")
         try_num += 1
         no_list.append(ans)
