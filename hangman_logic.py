@@ -39,6 +39,6 @@ while True:
                 word_show = word_show[:i] + ans + word_show[i+1:]
         print(word_show)
     # 사람이 먼저 완성되면 출제자 A가 이긴다
-    if try_num == 7 : break
+    if try_num == 10 : break
     # 단어가 먼저 완성되면 단오를 맞힌 사람 B가 이긴다
     if word_show.find("_") == -1 : break
