@@ -1,4 +1,5 @@
-import pygame, math
+import math
+import pygame
 
 # 1. 게임 초기화
 pygame.init()
@@ -10,6 +11,7 @@ title = "HANGMAN"
 pygame.display.set_caption(title)
 
 # 3. 게임 내 필요한 설정
+hint_font = pygame.font.Font('/System/Library/Fonts/Supplemental/Apple Chancery.ttf', 80)
 clock = pygame.time.Clock()
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -17,6 +19,7 @@ red = (255, 0, 0)
 exiting = False
 k = 0
 drop = False
+
 
 # 정수로 변환 시켜 주는 함수
 def tup_r(tup):
@@ -52,12 +55,17 @@ while not exiting:
     pygame.draw.line(screen, black, D, E, 3)
 
     F = tup_r((E[0], E[1]+size[0]/6))
-    if drop == False:
+
+    # if drop == False:
+    if not drop:
         pygame.draw.line(screen, black, E, F, 3)
 
     r_head = round(size[0]/12)
-    if drop == True : G = (F[0], F[1]+r_head+k*10)
-    else: G = (F[0], F[1]+r_head)
+    # if drop == True:
+    if drop:
+        G = (F[0], F[1]+r_head+k*10)
+    else:
+        G = (F[0], F[1]+r_head)
 
     pygame.draw.circle(screen, black, G, r_head, 3)
 
@@ -92,7 +100,8 @@ while not exiting:
     pygame.draw.line(screen, black, L, M, 3)
     pygame.draw.line(screen, black, L, N, 3)
 
-    if drop == False:
+    # if drop == False:
+    if not drop:
         O = tup_r((size[0]/2-size[0]/6, E[1]/2+F[1]/2))
         P = (O[0]+k*2, O[1])
 
@@ -101,6 +110,13 @@ while not exiting:
             drop = True
             k = 0
         pygame.draw.line(screen, red, O, P, 3)
+
+    # hint
+    word_show = "___"
+    hint = hint_font.render(word_show, True, black)
+    hint_size = hint.get_size()
+    hint_pos = tup_r((size[0]/2-hint_size[0]/2, size[1]*5/6-hint_size[1]/2))
+    screen.blit(hint, hint_pos)
 
     # 4-5. update
     pygame.display.flip()
