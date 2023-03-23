@@ -12,6 +12,7 @@ pygame.display.set_caption(title)
 
 # 3. 게임 내 필요한 설정
 hint_font = pygame.font.Font('/System/Library/Fonts/Supplemental/Apple Chancery.ttf', 80)
+entry_font = pygame.font.Font('/System/Library/Fonts/Supplemental/Apple Chancery.ttf', 60)
 clock = pygame.time.Clock()
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -19,6 +20,7 @@ red = (255, 0, 0)
 exiting = False
 k = 0
 drop = False
+try_num = 0
 
 
 # 정수로 변환 시켜 주는 함수
@@ -101,7 +103,7 @@ while not exiting:
     pygame.draw.line(screen, black, L, N, 3)
 
     # if drop == False:
-    if not drop:
+    if not drop and try_num == 8:
         O = tup_r((size[0]/2-size[0]/6, E[1]/2+F[1]/2))
         P = (O[0]+k*2, O[1])
 
@@ -117,6 +119,18 @@ while not exiting:
     hint_size = hint.get_size()
     hint_pos = tup_r((size[0]/2-hint_size[0]/2, size[1]*5/6-hint_size[1]/2))
     screen.blit(hint, hint_pos)
+
+    # 입력창 표시 하기
+    entry_text = "Q"
+    entry = entry_font.render(entry_text, True, white)
+    entry_size = entry.get_size()
+
+    entry_pos = tup_r((size[0]/2-entry_size[0]/2, size[1]*17/18-entry_size[1]/2))
+
+    entry_bg_size = 80
+    pygame.draw.rect(screen, black, tup_r((size[0]/2-entry_bg_size/2, size[1]*17/18-entry_bg_size/2, entry_bg_size, entry_bg_size)))
+
+    screen.blit(entry, entry_pos)
 
     # 4-5. update
     pygame.display.flip()
