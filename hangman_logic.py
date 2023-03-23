@@ -20,6 +20,7 @@ print(word_show)
 try_num = 0
 ok_list = []
 no_list = []
+
 while True:
     # B가 단어에 포함될 것 같은 알파벳을 하나씩 말한다
     ans = input().upper()

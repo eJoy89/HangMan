@@ -1,5 +1,6 @@
 import math
 import pygame
+import random
 
 # 1. 게임 초기화
 pygame.init()
@@ -18,19 +19,39 @@ black = (0, 0, 0)
 white = (255, 255, 255)
 red = (255, 0, 0)
 exiting = False
-k = 0
 drop = False
 entre_go = False
-try_num = 0
 entry_text = ''
 
 
-# 정수로 변환 시켜 주는 함수
 def tup_r(tup):
     temp_list = []
     for a in tup:
         temp_list.append(round(a))
     return tuple(temp_list)
+
+
+# A가 영어 단어를 1개 생각 한다
+f = open("voca.txt", "r", encoding="UTF-8")
+raw_data = f.read()
+f.close()
+data_list = raw_data.split("\n")
+data_list = data_list[:-1]
+while True:
+    r_index = random.randrange(0, len(data_list))
+    word = data_list[r_index].replace(u"\xa0", u" ").split(" ")[1]
+    if len(word) <= 6: break
+word = word.upper()
+
+# 단어의 글자 수만큼 밑줄을 듯는다
+word_show = "_" * len(word)
+try_num = 0
+ok_list = []
+no_list = []
+
+k = 0
+
+# 정수로 변환 시켜 주는 함수
 
 
 # 4. 메인 이벤트
@@ -45,30 +66,43 @@ while not exiting:
             key_name = pygame.key.name(event.key)
 
             # filter
-            if len(key_name) == 1:
-                # if (ord(key_name) >= 65 and ord(key_name) <= 90) or (ord(key_name) >= 97 and ord(key_name) <= 122):
-                if (65 <= ord(key_name) <= 90) or (97 <= ord(key_name) <= 122):
-                    entry_text = key_name.upper()
-                else:
-                    entry_text = ''
-            else:
-                entry_text = ''
             if (key_name == 'return' or key_name == 'enter') and entry_text != '':
                 entre_go = True
+            elif len(key_name) == 1:
+                if (ord(key_name) >= 65 and ord(key_name) <= 90) or (ord(key_name) >= 97 and ord(key_name) <= 122):
+                    # if (65 <= ord(key_name) <= 90) or (97 <= ord(key_name) <= 122):
+                    entry_text = key_name.upper()
+                else: entry_text = ''
+            else: entry_text = ''
 
     # 4-3. 입력, 시간에 따른 변화
-    k += 1
+    if try_num == 8: k += 1
+    if entre_go:
+        ans = entry_text
+        result = word.find(ans)
+
+        if result == -1:
+            try_num += 1
+            no_list.append(ans)
+        else:
+            ok_list.append(ans)
+            for i in range(len(word)):
+                if word[i] == ans:
+                    word_show = word_show[:i] + ans + word_show[i+1:]
+
+        # entre_go 초기화
+        entre_go = False
+        entry_text = ''
+
     # 4-4. 그리기
     screen.fill(white)
     A = tup_r((0, size[1] * 2 / 3))
     B = (size[0], A[1])
-
-    pygame.draw.line(screen, black, A, B, 3)
-
     C = tup_r((size[0] / 7, A[1]))
     D = (C[0], C[0])
     E = tup_r((size[0] / 2, D[1]))
 
+    pygame.draw.line(screen, black, A, B, 3)
     pygame.draw.line(screen, black, C, D, 3)
     pygame.draw.line(screen, black, D, E, 3)
 
@@ -85,12 +119,16 @@ while not exiting:
     else:
         G = (F[0], F[1] + r_head)
 
-    pygame.draw.circle(screen, black, G, r_head, 3)
+    # 머리
+    if try_num >= 1:
+        pygame.draw.circle(screen, black, G, r_head, 3)
 
     H = (G[0], G[1] + r_head)
     I = (H[0], H[1] + r_head)
 
-    pygame.draw.line(screen, black, H, I, 3)
+    # 목
+    if try_num >= 2:
+        pygame.draw.line(screen, black, H, I, 3)
 
     l_arm = r_head * 2
     J = (I[0] - l_arm * math.cos(30 * math.pi / 180),
@@ -100,12 +138,17 @@ while not exiting:
          I[1] + l_arm * math.sin(30 * math.pi / 180))
     K = tup_r(K)
 
-    pygame.draw.line(screen, black, I, J, 3)
-    pygame.draw.line(screen, black, I, K, 3)
+    # 팔
+    if try_num >= 3:
+        pygame.draw.line(screen, black, I, J, 3)
+    if try_num >= 4:
+        pygame.draw.line(screen, black, I, K, 3)
 
     L = (I[0], I[1] + l_arm)
 
-    pygame.draw.line(screen, black, I, L, 3)
+    # 몸통
+    if try_num >= 5:
+        pygame.draw.line(screen, black, I, L, 3)
 
     l_leg = round(r_head * 2.5)
     M = (L[0] - l_leg * math.cos(60 * math.pi / 180),
@@ -115,8 +158,11 @@ while not exiting:
          L[1] + l_leg * math.sin(60 * math.pi / 180))
     N = tup_r(N)
 
-    pygame.draw.line(screen, black, L, M, 3)
-    pygame.draw.line(screen, black, L, N, 3)
+    # 다리
+    if try_num >= 6:
+        pygame.draw.line(screen, black, L, M, 3)
+    if try_num >= 7:
+        pygame.draw.line(screen, black, L, N, 3)
 
     # if drop == False:
     if not drop and try_num == 8:
@@ -130,7 +176,6 @@ while not exiting:
         pygame.draw.line(screen, red, O, P, 3)
 
     # hint
-    word_show = "___"
     hint = hint_font.render(word_show, True, black)
     hint_size = hint.get_size()
     hint_pos = tup_r((size[0] / 2 - hint_size[0] / 2, size[1] * 5 / 6 - hint_size[1] / 2))
