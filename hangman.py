@@ -86,7 +86,7 @@ while not exiting:
 
     pygame.display.flip()
 
-# 4. 메인 이벤트
+# 메인 이벤트
 while not exiting:
     # 4-1. FPS 설정
     clock.tick(60)
@@ -109,7 +109,7 @@ while not exiting:
             else:
                 entry_text = ''
 
-    # 4-3. 입력, 시간에 따른 변화
+    # 입력, 시간에 따른 변화
     if try_num == 8:
         k += 1
     if entre_go:
@@ -129,7 +129,7 @@ while not exiting:
         entre_go = False
         entry_text = ''
 
-    # 4-4. 그리기
+    # 그리기
     screen.fill(white)
     A = tup_r((0, size[1] * 2 / 3))
     B = (size[0], A[1])
@@ -234,8 +234,8 @@ while not exiting:
     no_pos = tup_r((20, size[1] * 2 / 3 + 20))
     screen.blit(no, no_pos)
 
-    # 4-5. update
+    # update
     pygame.display.flip()
 
-# 5.게임 종료
+# 게임 종료
 pygame.quit()
