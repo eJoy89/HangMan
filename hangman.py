@@ -14,6 +14,7 @@ pygame.display.set_caption(title)
 # 3. 게임 내 필요한 설정
 hint_font = pygame.font.Font('/System/Library/Fonts/Supplemental/Apple Chancery.ttf', 80)
 entry_font = pygame.font.Font('/System/Library/Fonts/Supplemental/Apple Chancery.ttf', 60)
+no_font = pygame.font.Font('/System/Library/Fonts/Supplemental/Apple Chancery.ttf', 40)
 clock = pygame.time.Clock()
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -24,6 +25,7 @@ entre_go = False
 entry_text = ''
 
 
+# 정수로 변환 시켜 주는 함수
 def tup_r(tup):
     temp_list = []
     for a in tup:
@@ -32,7 +34,7 @@ def tup_r(tup):
 
 
 # A가 영어 단어를 1개 생각 한다
-f = open("voca.txt", "r", encoding="UTF-8")
+f = open("voca.txt", "r")
 raw_data = f.read()
 f.close()
 data_list = raw_data.split("\n")
@@ -45,13 +47,14 @@ word = word.upper()
 
 # 단어의 글자 수만큼 밑줄을 듯는다
 word_show = "_" * len(word)
+# 폰트에 따라 사용 여부 결정
+# word_show = ' '.join(word_show)
+
 try_num = 0
 ok_list = []
 no_list = []
 
 k = 0
-
-# 정수로 변환 시켜 주는 함수
 
 
 # 4. 메인 이벤트
@@ -66,14 +69,16 @@ while not exiting:
             key_name = pygame.key.name(event.key)
 
             # filter
-            if (key_name == 'return' or key_name == 'enter') and entry_text != '':
-                entre_go = True
+            if key_name == 'return' or key_name == 'enter':
+                if entry_text != '' and (ok_list + no_list).count(entry_text) == 0:
+                    entre_go = True
             elif len(key_name) == 1:
-                if (ord(key_name) >= 65 and ord(key_name) <= 90) or (ord(key_name) >= 97 and ord(key_name) <= 122):
-                    # if (65 <= ord(key_name) <= 90) or (97 <= ord(key_name) <= 122):
+                if (65 <= ord(key_name) <= 90) or (97 <= ord(key_name) <= 122):
                     entry_text = key_name.upper()
-                else: entry_text = ''
-            else: entry_text = ''
+                else:
+                    entry_text = ''
+            else:
+                entry_text = ''
 
     # 4-3. 입력, 시간에 따른 변화
     if try_num == 8: k += 1
@@ -192,6 +197,12 @@ while not exiting:
         (size[0] / 2 - entry_bg_size / 2, size[1] * 17 / 18 - entry_bg_size / 2, entry_bg_size, entry_bg_size)))
 
     screen.blit(entry, entry_pos)
+
+    # incorrect alphabet add
+    no_text = " ".join(no_list)
+    no = no_font.render(no_text, True, red)
+    no_pos = tup_r((20, size[1]*2/3+20))
+    screen.blit(no, no_pos)
 
     # 4-5. update
     pygame.display.flip()
