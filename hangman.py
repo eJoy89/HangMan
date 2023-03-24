@@ -8,10 +8,11 @@ pygame.init()
 # 2. 게임창 옵션
 size = [500, 900]
 screen = pygame.display.set_mode(size)
-title = "HANGMAN"
-pygame.display.set_caption(title)
+pygame.display.set_caption("HANGMAN")
 
 # 3. 게임 내 필요한 설정
+title_font = pygame.font.Font('/System/Library/Fonts/Supplemental/Apple Chancery.ttf', 75)
+start_font = pygame.font.Font('/System/Library/Fonts/Supplemental/Times New Roman.ttf', 25)
 hint_font = pygame.font.Font('/System/Library/Fonts/Supplemental/Apple Chancery.ttf', 80)
 entry_font = pygame.font.Font('/System/Library/Fonts/Supplemental/Apple Chancery.ttf', 60)
 no_font = pygame.font.Font('/System/Library/Fonts/Supplemental/Apple Chancery.ttf', 40)
@@ -23,6 +24,7 @@ exiting = False
 drop = False
 entre_go = False
 entry_text = ''
+ready = False
 
 
 # 정수로 변환 시켜 주는 함수
@@ -56,6 +58,33 @@ no_list = []
 
 k = 0
 
+# 시작 화면
+while not exiting:
+    clock.tick(60)
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            exiting = True
+        if event.type == pygame.KEYDOWN:
+            ready = True
+    if ready:
+        break
+
+    screen.fill(black)
+
+    title = title_font.render("HANGMAN", True, white)
+    title_size = title.get_size()
+    title_pos = tup_r((size[0] / 2 - title_size[0] / 2, size[1] / 2 - title_size[1] / 2))
+
+    screen.blit(title, title_pos)
+
+    start = start_font.render("press any key to start the game", True, white)
+    start_size = start.get_size()
+    start_pos = tup_r((size[0] / 2 - start_size[0] / 2, size[1] / 1.2))
+
+    if pygame.time.get_ticks() % 1000 > 500:
+        screen.blit(start, start_pos)
+
+    pygame.display.flip()
 
 # 4. 메인 이벤트
 while not exiting:
@@ -81,7 +110,8 @@ while not exiting:
                 entry_text = ''
 
     # 4-3. 입력, 시간에 따른 변화
-    if try_num == 8: k += 1
+    if try_num == 8:
+        k += 1
     if entre_go:
         ans = entry_text
         result = word.find(ans)
@@ -93,7 +123,7 @@ while not exiting:
             ok_list.append(ans)
             for i in range(len(word)):
                 if word[i] == ans:
-                    word_show = word_show[:i] + ans + word_show[i+1:]
+                    word_show = word_show[:i] + ans + word_show[i + 1:]
 
         # entre_go 초기화
         entre_go = False
@@ -201,7 +231,7 @@ while not exiting:
     # incorrect alphabet add
     no_text = " ".join(no_list)
     no = no_font.render(no_text, True, red)
-    no_pos = tup_r((20, size[1]*2/3+20))
+    no_pos = tup_r((20, size[1] * 2 / 3 + 20))
     screen.blit(no, no_pos)
 
     # 4-5. update
