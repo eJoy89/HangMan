@@ -35,7 +35,6 @@ def tup_r(tup):
     return tuple(temp_list)
 
 
-# A가 영어 단어를 1개 생각 한다
 f = open("voca.txt", "r")
 raw_data = f.read()
 f.close()
@@ -44,7 +43,8 @@ data_list = data_list[:-1]
 while True:
     r_index = random.randrange(0, len(data_list))
     word = data_list[r_index].replace(u"\xa0", u" ").split(" ")[1]
-    if len(word) <= 6: break
+    if len(word) <= 6:
+        break
 word = word.upper()
 
 # 단어의 글자 수만큼 밑줄을 듯는다
